@@ -16,8 +16,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useParams } from "next/navigation";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const ACCESS_TOKEN =
@@ -30,7 +29,7 @@ const SearchQuery = () => {
   const [page, setPage] = useState(1);
   const { value } = useParams();
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     if (!value) return;
     setLoading(true);
     try {
@@ -56,11 +55,11 @@ const SearchQuery = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, value]);
 
   useEffect(() => {
     getData();
-  }, [page, value]);
+  }, [getData]);
 
   return (
     <div className="flex flex-col items-center ">

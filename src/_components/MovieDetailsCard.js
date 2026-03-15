@@ -4,11 +4,12 @@ import Footer from "@/_features/Footer";
 import Header from "@/_features/Header";
 import StarIcon from "@/_icons/StarIcon";
 import { Badge } from "@/components/ui/badge";
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { LoadingMovieList } from "@/_loading/LoadingMovieList";
 import MovieCard from "./MovieCard";
 import ButtonCard from "./ButtonCard";
+import Image from "next/image";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const ACCESS_TOKEN =
@@ -25,7 +26,7 @@ const MovieDetailsCard = ({ rating, className }) => {
   const router = useRouter();
   const { id } = useParams();
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     if (!id) return;
     setLoading(true);
     try {
@@ -67,11 +68,11 @@ const MovieDetailsCard = ({ rating, className }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     getData();
-  }, [id]);
+  }, [getData]);
   if (loading) {
     return <LoadingMovieList />;
   }
@@ -121,10 +122,13 @@ const MovieDetailsCard = ({ rating, className }) => {
           </div>
           {movieDetail && (
             <div className="flex flex-row justify-between items-center w-full ">
-              <img
+              <Image
                 src={`https://image.tmdb.org/t/p/w500${movieDetail.poster_path}`}
                 alt={movieDetail.title}
-                className="w-[290px] h-[428px] rounded-lg"
+                width={290}
+                height={428}
+                className="rounded-lg"
+                sizes="290px"
               />
               {trailer ? (
                 <iframe
@@ -135,10 +139,13 @@ const MovieDetailsCard = ({ rating, className }) => {
                   allowFullScreen
                 />
               ) : (
-                <img
+                <Image
                   src={`https://image.tmdb.org/t/p/w780${movieDetail.backdrop_path}`}
                   alt={movieDetail.title}
-                  className="w-[760px] h-[428px] rounded-lg"
+                  width={760}
+                  height={428}
+                  className="rounded-lg"
+                  sizes="760px"
                 />
               )}
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import SearchIcon from "@/_icons/SearchIcon";
 import SearchMovieCard from "./SearchMovieCard";
 import { useRouter } from "next/navigation";
@@ -18,20 +18,6 @@ const SearchCard = () => {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    if (!searchValue) {
-      setSearchData([]);
-      setIsOpen(false);
-      return;
-    }
-    const delay = setTimeout(() => {
-      getData();
-    }, 500);
-
-    return () => clearTimeout(delay);
-  }, [searchValue]);
-
- 
-  useEffect(() => {
     const handleClickOutside = (e) => {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
         setIsOpen(false);
@@ -48,7 +34,7 @@ const SearchCard = () => {
     }
   };
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     if (!searchValue) return;
     setLoading(true);
     try {
@@ -64,7 +50,20 @@ const SearchCard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchValue]);
+
+  useEffect(() => {
+    if (!searchValue) {
+      setSearchData([]);
+      setIsOpen(false);
+      return;
+    }
+    const delay = setTimeout(() => {
+      getData();
+    }, 500);
+
+    return () => clearTimeout(delay);
+  }, [searchValue, getData]);
 
   return (
     <div ref={containerRef} className="relative w-[379px]">

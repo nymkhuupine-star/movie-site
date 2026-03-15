@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import MovieCard from "@/_components/MovieCard";
 import { LoadingMovieList } from "@/_loading/LoadingMovieList";
 import ButtonCard from "@/_components/ButtonCard";
@@ -20,7 +20,7 @@ export const MovieList = (props) => {
   const router = useRouter();
   const [movieData, setMoviedata] = useState([]);
   const [loading, setLoading] = useState(false);
-  const getData = async () => {
+  const getData = useCallback(async () => {
     setLoading(true);
     try {
       const upcomingMovieEndpoint = `${BASE_URL}/movie/${type}?language=en-US&page=1`;
@@ -36,10 +36,10 @@ export const MovieList = (props) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [type]);
   useEffect(() => {
     getData();
-  }, []);
+  }, [getData]);
   if (loading) {
     return <LoadingMovieList />;
   }

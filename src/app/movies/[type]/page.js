@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import MovieCard from "@/_components/MovieCard";
 import ButtonCard from "@/_components/ButtonCard";
 import Footer from "@/_features/Footer";
@@ -23,7 +23,7 @@ export default function MoviesType() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [upcomingData, setPopularData] = useState([]);
-  const getPopularData = async () => {
+  const getPopularData = useCallback(async () => {
     const endpoint = `${BASE_URL}/movie/${param.type}?language=en-US&page=${page}`;
     const response = await fetch(endpoint, {
       headers: {
@@ -33,10 +33,10 @@ export default function MoviesType() {
     });
     const data = await response.json();
     setPopularData(data.results || []);
-  };
+  }, [page, param.type]);
   useEffect(() => {
     getPopularData();
-  }, [param.type, page]);
+  }, [getPopularData]);
   if (loading) {
     return <LoadingMovieList />;
   }

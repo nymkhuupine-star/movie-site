@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Header from "@/_features/Header";
 import Footer from "@/_features/Footer";
@@ -45,7 +45,7 @@ const GenrePage = () => {
   const [totalResults, setTotalResults] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const fetchMovies = async () => {
+  const fetchMovies = useCallback(async () => {
     if (!selectedGenres.length) return;
     setLoading(true);
     try {
@@ -63,9 +63,9 @@ const GenrePage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, selectedGenres]);
 
-  const fetchGenres = async () => {
+  const fetchGenres = useCallback(async () => {
     try {
       const res = await fetch(`${BASE_URL}/genre/movie/list?language=en`, {
         headers: { Authorization: `Bearer ${ACCESS_TOKEN}` },
@@ -75,10 +75,10 @@ const GenrePage = () => {
     } catch (error) {
       console.error(error);
     }
-  };
+  }, []);
 
-  useEffect(() => { fetchGenres(); }, []);
-  useEffect(() => { fetchMovies(); }, [selectedGenres, page]);
+  useEffect(() => { fetchGenres(); }, [fetchGenres]);
+  useEffect(() => { fetchMovies(); }, [fetchMovies]);
   useEffect(() => {
     if (genreId) {
       setPage(1);
