@@ -9,17 +9,17 @@ const Modes = (props) => (
   >
     <g filter="url(#a)">
       <path
-        fill="#fff"
+        fill="var(--color-card)"
         d="M2 11.5c0-5.523 4.477-10 10-10h16c5.523 0 10 4.477 10 10v16c0 5.523-4.477 10-10 10H12c-5.523 0-10-4.477-10-10v-16Z"
         shapeRendering="crispEdges"
       />
       <path
-        stroke="#E4E4E7"
+        stroke="var(--color-border)"
         d="M12 2h16a9.5 9.5 0 0 1 9.5 9.5v16A9.5 9.5 0 0 1 28 37H12a9.5 9.5 0 0 1-9.5-9.5v-16A9.5 9.5 0 0 1 12 2Z"
         shapeRendering="crispEdges"
       />
       <path
-        stroke="#18181B"
+        stroke="var(--color-foreground)"
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M20 13.5a4.243 4.243 0 0 0 6 6 6 6 0 1 1-6-6Z"

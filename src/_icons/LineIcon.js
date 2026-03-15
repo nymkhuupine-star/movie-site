@@ -8,7 +8,7 @@ const LineIcon = (props) => (
     {...props}
   >
     <path
-      stroke="#18181B"
+      stroke="currentColor"
       strokeLinecap="round"
       strokeLinejoin="round"
       d="M3.333 8h9.333m0 0L8 3.333M12.666 8 8 12.667"

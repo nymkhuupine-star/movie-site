@@ -8,7 +8,7 @@ const LinesIcon = (props) => (
     {...props}
   >
     <path
-      stroke="#09090B"
+      stroke="currentColor"
       strokeLinecap="round"
       strokeLinejoin="round"
       d="m6 12 4-4-4-4"

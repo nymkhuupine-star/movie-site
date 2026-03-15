@@ -47,29 +47,29 @@ export const MovieList = (props) => {
     router.push(`/movies/${type}`);
   };
   return (
-    <div className="flex justify-center item-center">
-      <div className="flex flex-col gap-[32px]  pt-[40px]  max-w-[1280px] ">
-        <div className=" flex flex-row justify-between items-center">
-          <p className="[font-size:34px]"> {categoryNames[type]}</p>
-          <ButtonCard
-            onClick={handleSeeMoreButton}
-            className="flex justify-center items-center"
-          />
-        </div>
+  <div className="flex justify-center items-center w-full px-[40px]">
+    <div className="flex flex-col gap-[32px] pt-[40px] w-full max-w-[1280px]">
+      <div className="flex flex-row justify-between items-center">
+        <p className="text-[34px]">{categoryNames[type]}</p>
+        <ButtonCard
+          onClick={handleSeeMoreButton}
+          className="flex justify-center items-center"
+        />
+      </div>
 
-        <div className=" grid grid-cols-5 w-full justify-between max-w-[1280px] gap-[32px] pb-[51px]">
-          {movieData.slice(0, 10).map((movie) => (
-            <MovieCard
-              key={movie.id}
-              title={movie.title}
-              imageUrl={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              rating={movie.vote_average}
-              id={movie.id}
-            />
-          ))}
-        </div>
+      <div className="grid grid-cols-5 gap-[32px] pb-[51px]">
+        {movieData.slice(0, 10).map((movie) => (
+          <MovieCard
+            key={movie.id}
+            title={movie.title}
+            imageUrl={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            rating={movie.vote_average}
+            id={movie.id}
+          />
+        ))}
       </div>
     </div>
-  );
-};
+  </div>
+);};
+
 export default MovieList;

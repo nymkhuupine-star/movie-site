@@ -1,7 +1,5 @@
 "use client";
 
-import MovieCard from "@/_components/MovieCard";
-import SearchMovieCard from "@/_components/SearchMovieCard";
 import SearchResultMovieCard from "@/_components/SearchResultMovieCard";
 import Footer from "@/_features/Footer";
 import Header from "@/_features/Header";
@@ -33,13 +31,10 @@ const SearchQuery = () => {
   const { value } = useParams();
 
   const getData = async () => {
-    console.log("gello", value, page);
-
     if (!value) return;
     setLoading(true);
     try {
       const movieEndpoint = `${BASE_URL}/search/movie?query=${value}&language=en-US&page=${page}`;
-
       const genreEndpoint = `${BASE_URL}/genre/movie/list?language=en`;
 
       const [movieRes, genreRes] = await Promise.all([
@@ -73,7 +68,9 @@ const SearchQuery = () => {
       <div className=" w-[1280px] justify-center ">
         <div className=" ">
           <p className="text-3xl pt-[52px]"> Search results</p>
-          <p className="text-xl pt-[32px] pb-[32px]"> 5 results for “”</p>
+          <p className="text-xl pt-[32px] pb-[32px]">
+            {movieData.length} results for &ldquo;{decodeURIComponent(value || "")}&rdquo;
+          </p>
         </div>
         <div className="flex flex-row   w-[1280px]">
           <div className=" flex flex-col">
@@ -121,7 +118,6 @@ const SearchQuery = () => {
           <SearchPipe />
           <div className="flex flex-col gap-12 items-center  pl-[22px] max-w-[1440px]">
             <div className="flex flex-col gap-2">
-              {" "}
               <p className="text-2xl"> Genres</p>
               <p> See lists of movies by genre </p>
             </div>
@@ -140,9 +136,9 @@ const SearchQuery = () => {
           </div>
         </div>
       </div>
-
       <Footer />
     </div>
   );
 };
+
 export default SearchQuery;

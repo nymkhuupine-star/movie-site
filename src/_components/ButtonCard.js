@@ -6,10 +6,10 @@ const ButtonCard = ({ onClick, className }) => {
   return (
     <button
       onClick={onClick}
-      className={`flex flex-row w-[110px] h-[30px] border border-slate-300 rounded-sm items-center justify-center ${className}`}
+      className={`inline-flex items-center gap-2 h-9 px-3 rounded-sm border border-border bg-card text-foreground hover:bg-accent transition ${className}`}
     >
       See more
-      <LineIcon className=" " />
+      <LineIcon className="size-4" />
     </button>
   );
 };

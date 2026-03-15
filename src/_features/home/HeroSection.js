@@ -50,14 +50,15 @@ export const HeroSection = () => {
       <Carousel className=" max-w-[1440px] h-[600px] flex items-center">
         <CarouselContent className="flex items-center ">
           {movieData?.slice(0, 5)?.map((movie, index) => (
-            <CarouselItem key={movie.id}>
+            <CarouselItem key={`${movie.id}-${index}`}>
               <Card className=" max-w-[1440px] h-[600px]  ">
                 <CardContent className="p-0  w-full h-full">
                   <HeroSectionCard
-                    key={movie.id}
+                    movieId={movie.id}
                     title={movie.title}
                     imageUrl={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
                     rating={movie.vote_average}
+                    description={movie.overview}
                   />
                 </CardContent>
               </Card>

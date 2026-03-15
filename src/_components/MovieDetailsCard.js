@@ -107,7 +107,7 @@ const MovieDetailsCard = ({ rating, className }) => {
           <div className="flex flex-row  justity-center justify-between  ">
             <div className="flex flex-col pt-[52px] ">
               <p className="text-2xl font-extrabold">{movieDetail.title}</p>
-              <p>{movieDetail.release_date} </p>
+              <p className="text-muted-foreground">{movieDetail.release_date} </p>
             </div>
             <div className=" flex flex-col pt-[52px] ">
               <p>Rating </p>
@@ -115,7 +115,7 @@ const MovieDetailsCard = ({ rating, className }) => {
                 <StarIcon className=" " />
                 <p className=" text-lg "> {rating} </p>
 
-                <p className="text-lg text-neutral-400 ">/10</p>
+                <p className="text-lg text-muted-foreground ">/10</p>
               </div>
             </div>
           </div>
@@ -145,11 +145,12 @@ const MovieDetailsCard = ({ rating, className }) => {
           )}
 
           <div className="flex flex-col gap-2  max-w-[1300px] w-full">
-            <div className="pt-[32px] pb-[32px]">
+            <div className="pt-[32px] pb-[32px] flex flex-wrap gap-2">
               {movieData?.slice(0, 5).map((movie) => (
                 <Badge
                   key={movie.id}
-                  className=" bg-white text-black border border-gray-300 px-4 py-2"
+                  variant="outline"
+                  className="bg-card text-foreground border-border px-4 py-2"
                 >
                   {movie.title}
                 </Badge>
@@ -159,13 +160,13 @@ const MovieDetailsCard = ({ rating, className }) => {
           </div>
           <table className="border-collapse w-full max-w-[1300px] pt-[20px]">
             <tbody>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-border">
                 <th className="text-left p-2">Director</th>
                 <td className="p-2">
                   {directors?.map((d) => d.name).join(",")}
                 </td>
               </tr>
-              <tr className="border-b border-gray-300">
+              <tr className="border-b border-border">
                 <th className="text-left p-2">Writers</th>
                 <td className="p-2">
                   {" "}

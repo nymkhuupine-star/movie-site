@@ -12,14 +12,15 @@ import {
 } from "@/components/ui/select";
 import HeaderIcon from "@/_icons/HeaderIcon";
 import Modes from "@/_icons/Modes";
-// import GenreIcon from "@/_icons/GenreIcon";
-// import SearchIcon from "@/_icons/SearchIcon";
+
 import LinesIcon from "@/_icons/LinesIcon";
-// import GenreButton from "@/_components/GenreButton";
+
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SearchCard from "@/_components/SearchCard";
+import GenreButton from "@/_components/GenreButton";
+import { useTheme } from "next-themes";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const ACCESS_TOKEN =
@@ -27,7 +28,9 @@ const ACCESS_TOKEN =
 
 export default function Header() {
   const [data, setData] = useState([]);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+  const { resolvedTheme, setTheme } = useTheme();
   const getPopularData = async () => {
     const endpoint = `${BASE_URL}/genre/movie/list?language=en`;
     const response = await fetch(endpoint, {
@@ -41,6 +44,9 @@ export default function Header() {
   };
   useEffect(() => {
     getPopularData();
+  }, []);
+  useEffect(() => {
+    setMounted(true);
   }, []);
 
   const navigateToHomePage = () => {
@@ -73,14 +79,13 @@ export default function Header() {
                 </SelectLabel>
                 <div className="flex flex-col items-center gap-2">
                   <div className="flex w-full flex-wrap gap-2 grid grid-cols-5 ">
-                    {data?.map((movie) => (
-                      <Badge
-                        key={movie.id}
-                        className=" bg-white text-black border border-gray-300"
-                      >
-                        {movie.name} <LinesIcon />
-                      </Badge>
-                    ))}
+                   {data?.map((genre) => (
+  <GenreButton
+    key={genre.id}
+    id={genre.id}
+    type={genre.name}
+  />
+))}
                   </div>
                 </div>
               </SelectGroup>
@@ -88,7 +93,17 @@ export default function Header() {
           </Select>
           <SearchCard />
         </div>
-        <Modes />
+        <button
+          type="button"
+          aria-label="Toggle dark mode"
+          className="rounded-md bg-transparent text-foreground hover:bg-accent/30 transition"
+          onClick={() =>
+            setTheme(resolvedTheme === "dark" ? "light" : "dark")
+          }
+          disabled={!mounted}
+        >
+          <Modes />
+        </button>
       </div>
     </div>
   );
