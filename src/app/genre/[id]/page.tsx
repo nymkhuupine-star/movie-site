@@ -149,7 +149,7 @@ const GenrePage = () => {
           {/* Right - Movies */}
           <div className="flex flex-col flex-1 border-l border-border pl-6">
             <p className="text-sm pb-[16px]">
-              {totalResults} titles in "{selectedGenreNames}"
+              {totalResults} titles in &quot;{selectedGenreNames}&quot;
             </p>
 
             {loading ? (
