@@ -155,7 +155,7 @@ const GenrePage = () => {
             {loading ? (
               <p className="text-muted-foreground">Loading...</p>
             ) : (
-              <div className="grid grid-cols-4 gap-5">
+              <div className="grid grid-cols-[repeat(4,190px)] gap-6 pb-8 justify-start">
                 {movies.map((movie) => (
                   <MovieCard
                     key={movie.id}
@@ -163,6 +163,7 @@ const GenrePage = () => {
                     title={movie.title}
                     imageUrl={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                     rating={movie.vote_average}
+                    minimumWidth="190px"
                   />
                 ))}
               </div>
