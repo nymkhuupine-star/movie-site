@@ -6,8 +6,8 @@ const MovieCard = ({
   title,
   imageUrl,
   id,
-  minimumWidth,
-  className,
+  minimumWidth = "229px",
+  className = "",
 }) => {
   const router = useRouter();
 
@@ -15,12 +15,13 @@ const MovieCard = ({
     router.push(`/movie/${id}`);
   };
 
-  const getMinimumWidth = minimumWidth || "229px";
+  const getMinimumWidth = minimumWidth;
 
   return (
     <div
-      className={`bg-neutral-200 dark:bg-neutral-800 rounded-sm h-[439px] flex-1 cursor-pointer`}
+      className={`bg-neutral-200 dark:bg-neutral-800 rounded-sm h-[439px] flex-1 cursor-pointer ${className}`}
       onClick={handleRouter}
+      style={{ minWidth: getMinimumWidth }}
     >
       <div
         style={{ backgroundImage: `url(${imageUrl})` }}
