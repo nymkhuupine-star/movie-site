@@ -68,7 +68,7 @@ const SearchCard = () => {
   return (
     <div ref={containerRef} className="relative w-[379px]">
       <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10">
-        <SearchIcon className="w-4 h-4" />
+        <SearchIcon className="text-gray-500 dark:text-white w-4 h-4" />
       </div>
 
       <input
@@ -81,22 +81,23 @@ const SearchCard = () => {
         placeholder="Search..."
       />
 
-      
       {isOpen && (
         <div className="absolute top-[40px] left-0 w-full bg-white border border-slate-200 rounded-xl shadow-lg z-50 overflow-hidden">
           {loading ? (
             <p className="text-sm text-muted-foreground p-3">Loading...</p>
           ) : (
-            searchData.slice(0, 5).map((movie) => (
-              <SearchMovieCard
-                key={movie.id}
-                id={movie.id}
-                title={movie.title}
-                imageUrl={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                rating={movie.vote_average}
-                onClick={() => setIsOpen(false)}
-              />
-            ))
+            searchData
+              .slice(0, 5)
+              .map((movie) => (
+                <SearchMovieCard
+                  key={movie.id}
+                  id={movie.id}
+                  title={movie.title}
+                  imageUrl={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  rating={movie.vote_average}
+                  onClick={() => setIsOpen(false)}
+                />
+              ))
           )}
         </div>
       )}
