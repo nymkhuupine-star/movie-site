@@ -22,47 +22,69 @@ export default function MoviesType() {
   const param = useParams();
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [upcomingData, setPopularData] = useState([]);
   const getPopularData = useCallback(async () => {
+    if (!param.type) return;
+    setLoading(true);
+    setError(null);
     const endpoint = `${BASE_URL}/movie/${param.type}?language=en-US&page=${page}`;
-    const response = await fetch(endpoint, {
-      headers: {
-        Authorization: `Bearer ${ACCESS_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    setPopularData(data.results || []);
+    try {
+      const response = await fetch(endpoint, {
+        headers: {
+          Authorization: `Bearer ${ACCESS_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) throw new Error("Failed to fetch movies");
+      const data = await response.json();
+      setPopularData(data.results || []);
+    } catch (e) {
+      console.error(e);
+      setError("Failed to load movies. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }, [page, param.type]);
   useEffect(() => {
     getPopularData();
   }, [getPopularData]);
   if (loading) {
-    return <LoadingMovieList />;
+    return (
+      <div className="flex flex-col items-center">
+        <Header />
+        <LoadingMovieList />
+        <Footer />
+      </div>
+    );
   }
-  const endpoint = `${BASE_URL}/movie/${param.type}?language=en-US&page=${page}`;
-
   return (
     <div className="flex justify-center  items-center flex-col">
       <Header />
-      <div className="flex flex-col gap-[32px] px-10 pt-[40px] pb-[36px] max-w-[1440px] ">
+      <div className="flex flex-col gap-8 w-full max-w-[1280px] px-4 sm:px-10 pt-10 pb-10">
         <div className=" flex flex-row justify-between">
-          <p className="[font-size:34px]"> {param.type}</p>
+          <p className="text-2xl sm:text-[34px] capitalize">{param.type}</p>
         </div>
 
-        <div className="flex flex-row  grid grid-cols-5 w-full gap-[32px] ">
-          {upcomingData?.slice(0, 10).map((movie) => (
-            <MovieCard
-              key={movie.id}
-              title={movie.title}
-              imageUrl={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              rating={movie.vote_average}
-              id={movie.id}
-            />
-          ))}
-        </div>
+        {error ? (
+          <div className="border border-border rounded-lg p-4 text-sm text-muted-foreground">
+            {error}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 w-full gap-4 sm:gap-8">
+            {upcomingData?.slice(0, 10).map((movie) => (
+              <MovieCard
+                key={movie.id}
+                title={movie.title}
+                imageUrl={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                rating={movie.vote_average}
+                id={movie.id}
+              />
+            ))}
+          </div>
+        )}
       </div>
-      <Pagination className="flex justify-end max-w-[1300px] pb-[76px]">
+      <Pagination className="flex justify-end w-full max-w-[1280px] px-4 sm:px-10 pb-[76px]">
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious

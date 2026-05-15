@@ -1,7 +1,5 @@
 import StarIcon from "@/_icons/StarIcon";
 import { useRouter } from "next/navigation";
-import ButtonCard from "./ButtonCard";
-import SearchLineIcon from "@/_icons/SearchLineIcon";
 
 const SearchResultMovieCard = ({ rating, title, imageUrl, id }) => {
   const router = useRouter();
@@ -9,26 +7,30 @@ const SearchResultMovieCard = ({ rating, title, imageUrl, id }) => {
   const handleRouter = () => {
     router.push(`/movie/${id}`);
   };
-  return (
-    <div className=" w-[165px] h-[331px]">
-      <div
-        className={`bg-neutral-200 rounded-sm h-[331px] flex flex-col w-[165px]`}
-        onClick={handleRouter}
-      >
-        <div
-          style={{ backgroundImage: `url(${imageUrl})` }}
-          className="h-[244px] w-[165px] bg-cover bg-center rounded-sm"
-        ></div>
 
-        <div className="flex flex-col">
-          <div className="flex flex-col ">
-            <div className="flex flex-row pl-[5px] ">
-              <StarIcon className=" " />
-              <p className="text-sm ">{rating}</p>
-              <p className="text-base text-neutral-400 ">/10</p>
-            </div>
-            <div className=" text-lg leading-snug  pl-[5px]"> {title}</div>
-          </div>
+  const safeImageUrl =
+    imageUrl && !String(imageUrl).includes("null") ? imageUrl : "/MoviePoster.png";
+  const displayRating =
+    typeof rating === "number" ? rating.toFixed(1) : rating ?? "-";
+
+  return (
+    <div
+      className="bg-neutral-200 dark:bg-neutral-800 rounded-sm cursor-pointer w-full"
+      onClick={handleRouter}
+    >
+      <div
+        style={{ backgroundImage: `url(${safeImageUrl})` }}
+        className="w-full aspect-[2/3] bg-cover bg-center rounded-sm"
+      ></div>
+
+      <div className="flex flex-col p-2">
+        <div className="flex flex-row items-center gap-1">
+          <StarIcon className="" />
+          <p className="text-sm dark:text-neutral-200">{displayRating}</p>
+          <p className="text-sm text-neutral-400 dark:text-neutral-500">/10</p>
+        </div>
+        <div className="text-sm sm:text-base leading-snug dark:text-white line-clamp-2">
+          {title}
         </div>
       </div>
     </div>

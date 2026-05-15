@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/pagination";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { LoadingMovieList } from "@/_loading/LoadingMovieList";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const ACCESS_TOKEN =
@@ -25,6 +26,7 @@ const ACCESS_TOKEN =
 const SearchQuery = () => {
   const [movieData, setMovieData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const { value } = useParams();
@@ -32,8 +34,10 @@ const SearchQuery = () => {
   const getData = useCallback(async () => {
     if (!value) return;
     setLoading(true);
+    setError(null);
     try {
-      const movieEndpoint = `${BASE_URL}/search/movie?query=${value}&language=en-US&page=${page}`;
+      const query = encodeURIComponent(String(value || ""));
+      const movieEndpoint = `${BASE_URL}/search/movie?query=${query}&language=en-US&page=${page}`;
       const genreEndpoint = `${BASE_URL}/genre/movie/list?language=en`;
 
       const [movieRes, genreRes] = await Promise.all([
@@ -45,6 +49,10 @@ const SearchQuery = () => {
         }),
       ]);
 
+      if (!movieRes.ok || !genreRes.ok) {
+        throw new Error("Failed to fetch search results");
+      }
+
       const genreData = await genreRes.json();
       const movieData = await movieRes.json();
 
@@ -52,6 +60,7 @@ const SearchQuery = () => {
       setMovieData(movieData.results || []);
     } catch (error) {
       console.error(error);
+      setError("Failed to load search results. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -61,79 +70,103 @@ const SearchQuery = () => {
     getData();
   }, [getData]);
 
+  if (loading && movieData.length === 0) {
+    return (
+      <div className="flex flex-col items-center">
+        <Header />
+        <LoadingMovieList />
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center ">
       <Header />
-      <div className=" w-[1280px] justify-center ">
+      <div className="w-full max-w-[1280px] px-4 sm:px-6 justify-center">
         <div className=" ">
           <p className="text-3xl pt-[52px]"> Search results</p>
           <p className="text-xl pt-[32px] pb-[32px]">
             {movieData.length} results for &ldquo;{decodeURIComponent(value || "")}&rdquo;
           </p>
         </div>
-        <div className="flex flex-row   w-[1280px]">
-          <div className=" flex flex-col">
-            <div className="w-full flex  gap-[32px] grid grid-cols-4">
-              {movieData.map((movie) => (
-                <SearchResultMovieCard
-                  minimumWidth="190px"
-                  key={movie.id}
-                  id={movie.id}
-                  title={movie.title}
-                  imageUrl={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  rating={movie.vote_average}
-                />
-              ))}
-            </div>
-            <div>
-              <Pagination className=" pl-[600px] pb-[344px] text-neutral-400   ">
+        {error ? (
+          <div className="border border-border rounded-lg p-4 text-sm text-muted-foreground">
+            {error}
+          </div>
+        ) : (
+          <div className="flex flex-col lg:flex-row gap-8 w-full">
+            <div className="flex flex-col flex-1">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-8">
+                {movieData.map((movie) => (
+                  <SearchResultMovieCard
+                    key={movie.id}
+                    id={movie.id}
+                    title={movie.title}
+                    imageUrl={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    rating={movie.vote_average}
+                  />
+                ))}
+              </div>
+
+              <Pagination className="flex justify-end pt-10 pb-20 text-neutral-400">
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationPrevious
                       href="#"
-                      onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setPage((prev) => Math.max(prev - 1, 1));
+                      }}
+                      className={page === 1 ? "pointer-events-none opacity-40" : ""}
                     />
                   </PaginationItem>
                   <PaginationItem>
                     <PaginationLink
                       href="#"
-                      onClick={() => setPage((prev) => prev + 1)}
+                      isActive
+                      onClick={(e) => e.preventDefault()}
+                      className="cursor-default"
                     >
-                      <Badge className="  border-neutral-200 bg-white  text-neutral-400 ">
-                        {page}
-                      </Badge>
+                      {page}
                     </PaginationLink>
                   </PaginationItem>
                   <PaginationItem>
                     <PaginationNext
                       href="#"
-                      onClick={() => setPage((prev) => prev + 1)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setPage((prev) => prev + 1);
+                      }}
                     />
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>
             </div>
-          </div>
-          <SearchPipe />
-          <div className="flex flex-col gap-12 items-center  pl-[22px] max-w-[1440px]">
-            <div className="flex flex-col gap-2">
-              <p className="text-2xl"> Genres</p>
-              <p> See lists of movies by genre </p>
-            </div>
-            <div className="flex flex-col items-center gap-[5px]">
-              <div className="flex w-full flex-wrap gap-[5px] grid grid-cols-3 ">
-                {data?.slice(0, 20).map((movie) => (
+
+            <SearchPipe className="hidden lg:block shrink-0 text-border" />
+
+            <div className="flex flex-col gap-6 lg:gap-12 lg:w-[320px] lg:pl-2">
+              <div className="flex flex-col gap-2">
+                <p className="text-2xl">Genres</p>
+                <p className="text-sm text-muted-foreground">
+                  See lists of movies by genre
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {data?.slice(0, 20).map((genre) => (
                   <Badge
-                    key={movie.id}
-                    className=" bg-white text-black border border-gray-300 "
+                    key={genre.id}
+                    className="bg-card text-foreground border border-border"
+                    variant="outline"
                   >
-                    {movie.name} <LinesIcon />
+                    {genre.name} <LinesIcon />
                   </Badge>
                 ))}
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
       <Footer />
     </div>

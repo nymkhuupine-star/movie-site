@@ -72,13 +72,13 @@ const HeroSectionCard = ({ movieId, title, rating, description, imageUrl }) => {
     <div className="flex items-center">
       <div
         style={{ backgroundImage: `url(${imageUrl})` }}
-        className="w-full h-[600px] max-w-[1440px] bg-cover bg-center flex items-end rounded-sm"
+        className="w-full h-[520px] sm:h-[600px] max-w-[1440px] bg-cover bg-center flex items-end rounded-sm"
       >
         {/* Gradient overlay */}
         <div className="w-full h-full flex items-end bg-gradient-to-t from-black/80 via-black/30 to-transparent rounded-sm">
-          <div className="flex flex-col pb-[60px] pl-[60px] gap-2">
+          <div className="flex flex-col pb-10 sm:pb-[60px] px-4 sm:pl-[60px] sm:pr-10 gap-2">
             <p className="text-white text-sm font-medium">Now Playing:</p>
-            <p className="text-white text-5xl font-bold">{title}</p>
+            <p className="text-white text-3xl sm:text-5xl font-bold">{title}</p>
 
             <div className="flex flex-row items-center gap-1">
               <StarIcon />
@@ -86,7 +86,7 @@ const HeroSectionCard = ({ movieId, title, rating, description, imageUrl }) => {
               <p className="text-neutral-300 text-base">/10</p>
             </div>
 
-            <p className="text-white w-[302px] text-sm leading-relaxed opacity-90">
+            <p className="text-white w-full max-w-[420px] text-sm leading-relaxed opacity-90">
               {description ||
                 "Elphaba, a misunderstood young woman because of her green skin, and Glinda, a popular girl, become friends at Shiz University in the Land of Oz. After an encounter with the Wonderful Wizard of Oz, their friendship reaches a crossroads."}
             </p>

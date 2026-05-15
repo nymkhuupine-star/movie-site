@@ -15,7 +15,7 @@ import LoadingHeroList from "@/_loading/LoadingHeroList";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const ACCESS_TOKEN =
-  "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMjI5ZmNiMGRmZTNkMzc2MWFmOWM0YjFjYmEyZTg1NiIsIm5iZiI6MTc1OTcxMTIyNy43OTAwMDAyLCJzdWIiOiI2OGUzMGZmYjFlN2Y3MjAxYjI5Y2FiYmIiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.M0DQ3rCdsWnMw8U-8g5yGXx-Ga00Jp3p11eRyiSxCuY ";
+  "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMjI5ZmNiMGRmZTNkMzc2MWFmOWM0YjFjYmEyZTg1NiIsIm5iZiI6MTc1OTcxMTIyNy43OTAwMDAyLCJzdWIiOiI2OGUzMGZmYjFlN2Y3MjAxYjI5Y2FiYmIiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.M0DQ3rCdsWnMw8U-8g5yGXx-Ga00Jp3p11eRyiSxCuY";
 
 export const HeroSection = () => {
   const [movieData, setMoviedata] = useState([]);
@@ -47,11 +47,11 @@ export const HeroSection = () => {
   }
   return (
     <div className="w-full flex justify-center items-center">
-      <Carousel className=" max-w-[1440px] h-[600px] flex items-center">
+      <Carousel className="w-full max-w-[1440px] h-[520px] sm:h-[600px] flex items-center">
         <CarouselContent className="flex items-center ">
           {movieData?.slice(0, 5)?.map((movie, index) => (
             <CarouselItem key={`${movie.id}-${index}`}>
-              <Card className=" max-w-[1440px] h-[600px]  ">
+              <Card className="w-full max-w-[1440px] h-[520px] sm:h-[600px]">
                 <CardContent className="p-0  w-full h-full">
                   <HeroSectionCard
                     movieId={movie.id}

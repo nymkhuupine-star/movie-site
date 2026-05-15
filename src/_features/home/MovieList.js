@@ -7,7 +7,7 @@ import ButtonCard from "@/_components/ButtonCard";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const ACCESS_TOKEN =
-  "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMjI5ZmNiMGRmZTNkMzc2MWFmOWM0YjFjYmEyZTg1NiIsIm5iZiI6MTc1OTcxMTIyNy43OTAwMDAyLCJzdWIiOiI2OGUzMGZmYjFlN2Y3MjAxYjI5Y2FiYmIiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.M0DQ3rCdsWnMw8U-8g5yGXx-Ga00Jp3p11eRyiSxCuY ";
+  "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMjI5ZmNiMGRmZTNkMzc2MWFmOWM0YjFjYmEyZTg1NiIsIm5iZiI6MTc1OTcxMTIyNy43OTAwMDAyLCJzdWIiOiI2OGUzMGZmYjFlN2Y3MjAxYjI5Y2FiYmIiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.M0DQ3rCdsWnMw8U-8g5yGXx-Ga00Jp3p11eRyiSxCuY";
 
 export const MovieList = (props) => {
   const { type } = props;
@@ -47,17 +47,17 @@ export const MovieList = (props) => {
     router.push(`/movies/${type}`);
   };
   return (
-  <div className="flex justify-center items-center w-full px-[40px]">
-    <div className="flex flex-col gap-[32px] pt-[40px] w-full max-w-[1280px]">
-      <div className="flex flex-row justify-between items-center">
-        <p className="text-[34px]">{categoryNames[type]}</p>
+  <div className="flex justify-center items-center w-full px-4 sm:px-10">
+    <div className="flex flex-col gap-8 pt-10 w-full max-w-[1280px]">
+      <div className="flex flex-row justify-between items-center gap-4">
+        <p className="text-2xl sm:text-[34px]">{categoryNames[type]}</p>
         <ButtonCard
           onClick={handleSeeMoreButton}
           className="flex justify-center items-center"
         />
       </div>
 
-      <div className="grid grid-cols-5 gap-[32px] pb-[51px]">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-8 pb-12">
         {movieData.slice(0, 10).map((movie) => (
           <MovieCard
             key={movie.id}

@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Header from "@/_features/Header";
 import Footer from "@/_features/Footer";
 import MovieCard from "@/_components/MovieCard";
+import LoadingMovieCard from "@/_loading/LoadingMovieCard";
 import {
   Pagination,
   PaginationContent,
@@ -44,36 +45,43 @@ const GenrePage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchMovies = useCallback(async () => {
     if (!selectedGenres.length) return;
     setLoading(true);
+    setError(null);
     try {
       const genreQuery = selectedGenres.join(",");
       const endpoint = `${BASE_URL}/discover/movie?language=en-US&with_genres=${genreQuery}&page=${page}`;
       const res = await fetch(endpoint, {
         headers: { Authorization: `Bearer ${ACCESS_TOKEN}` },
       });
+      if (!res.ok) throw new Error("Failed to fetch movies");
       const data = await res.json();
       setMovies(data.results || []);
       setTotalResults(data.total_results || 0);
       setTotalPages(Math.min(data.total_pages || 1, 500));
     } catch (error) {
       console.error(error);
+      setError("Failed to load movies. Please try again.");
     } finally {
       setLoading(false);
     }
   }, [page, selectedGenres]);
 
   const fetchGenres = useCallback(async () => {
+    setError(null);
     try {
       const res = await fetch(`${BASE_URL}/genre/movie/list?language=en`, {
         headers: { Authorization: `Bearer ${ACCESS_TOKEN}` },
       });
+      if (!res.ok) throw new Error("Failed to fetch genres");
       const data = await res.json();
       setGenres(data.genres || []);
     } catch (error) {
       console.error(error);
+      setError("Failed to load genres. Please refresh the page.");
     }
   }, []);
 
@@ -120,12 +128,12 @@ const GenrePage = () => {
   return (
     <div className="flex flex-col items-center">
       <Header />
-      <div className="w-full max-w-[1100px] px-6 pt-[40px] pb-[80px]">
+      <div className="w-full max-w-[1100px] px-4 sm:px-6 pt-[40px] pb-[80px]">
         <p className="text-2xl font-semibold pb-[24px]">Search filter</p>
 
-        <div className="flex flex-row gap-[28px]">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-7">
           {/* Left - Genres */}
-          <div className="w-[210px] flex-shrink-0">
+          <div className="w-full lg:w-[210px] flex-shrink-0">
             <p className="text-sm font-semibold pb-1">Genres</p>
             <p className="text-xs text-muted-foreground pb-3">See lists of movies by genre</p>
             <div className="flex flex-wrap gap-1.5">
@@ -147,15 +155,23 @@ const GenrePage = () => {
           </div>
 
           {/* Right - Movies */}
-          <div className="flex flex-col flex-1 border-l border-border pl-6">
+          <div className="flex flex-col flex-1 lg:border-l lg:border-border lg:pl-6 border-t border-border pt-6 lg:pt-0">
             <p className="text-sm pb-[16px]">
               {totalResults} titles in &quot;{selectedGenreNames}&quot;
             </p>
 
-            {loading ? (
-              <p className="text-muted-foreground">Loading...</p>
+            {error ? (
+              <div className="border border-border rounded-lg p-4 text-sm text-muted-foreground">
+                {error}
+              </div>
+            ) : loading ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6 pb-8">
+                {Array.from({ length: 8 }).map((_, index) => (
+                  <LoadingMovieCard key={index} />
+                ))}
+              </div>
             ) : (
-              <div className="grid grid-cols-[repeat(4,190px)] gap-6 pb-8 justify-start">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6 pb-8">
                 {movies.map((movie) => (
                   <MovieCard
                     key={movie.id}
@@ -163,7 +179,6 @@ const GenrePage = () => {
                     title={movie.title}
                     imageUrl={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                     rating={movie.vote_average}
-                    minimumWidth="190px"
                   />
                 ))}
               </div>

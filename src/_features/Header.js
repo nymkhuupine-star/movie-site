@@ -54,38 +54,48 @@ export default function Header() {
   };
 
   return (
-    <div
-      className="h-[59px] w-full flex flex-row  items-center z-40"
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <div className=" w-[1280px] h-full flex flex-row justify-between items-center  ">
-        <HeaderIcon onClick={navigateToHomePage} />
-        <div className="flex flex-row gap-12 items-center ">
+    <div className="w-full flex justify-center items-center z-40 border-b border-border">
+      <div className="w-full max-w-[1280px] px-4 sm:px-6 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={navigateToHomePage}
+            aria-label="Go to home"
+            className="rounded-md hover:bg-accent/30 transition p-1 -m-1"
+          >
+            <HeaderIcon />
+          </button>
+
+          <button
+            type="button"
+            aria-label="Toggle dark mode"
+            className="sm:hidden rounded-md bg-transparent text-foreground hover:bg-accent/30 transition p-1"
+            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+            disabled={!mounted}
+          >
+            <Modes />
+          </button>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 items-stretch sm:items-center">
           <Select>
-            <SelectTrigger className="w-[160px]">
+            <SelectTrigger className="w-full sm:w-[160px]">
               <SelectValue placeholder="Genre" />
             </SelectTrigger>
 
-            <SelectContent>
-              <SelectGroup className=" flex flex-col">
+            <SelectContent className="max-h-[70vh] overflow-auto">
+              <SelectGroup className="flex flex-col">
                 <SelectLabel>
-                  {" "}
-                  <p className="text-2xl"> Genres</p>
-                  <p> See lists of movies by genre </p>
+                  <p className="text-2xl">Genres</p>
+                  <p className="text-sm text-muted-foreground">
+                    See lists of movies by genre
+                  </p>
                 </SelectLabel>
-                <div className="flex flex-col items-center gap-2">
-                  <div className="flex w-full flex-wrap gap-2 grid grid-cols-5 ">
-                   {data?.map((genre) => (
-  <GenreButton
-    key={genre.id}
-    id={genre.id}
-    type={genre.name}
-  />
-))}
+                <div className="pt-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                    {data?.map((genre) => (
+                      <GenreButton key={genre.id} id={genre.id} type={genre.name} />
+                    ))}
                   </div>
                 </div>
               </SelectGroup>
@@ -93,13 +103,12 @@ export default function Header() {
           </Select>
           <SearchCard />
         </div>
+
         <button
           type="button"
           aria-label="Toggle dark mode"
-          className="rounded-md bg-transparent text-foreground hover:bg-accent/30 transition"
-          onClick={() =>
-            setTheme(resolvedTheme === "dark" ? "light" : "dark")
-          }
+          className="hidden sm:inline-flex rounded-md bg-transparent text-foreground hover:bg-accent/30 transition p-1"
+          onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
           disabled={!mounted}
         >
           <Modes />
